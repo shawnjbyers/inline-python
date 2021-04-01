@@ -23,8 +23,37 @@ esac
 # IF YOU'RE LOOKING AT THIS SCRIPT WITHOUT TRYING TO FIGURE OUT HOW IT WAS
 # WRITTEN, GO BACK NOW AND TRY. IF YOU'VE ALREADY GIVEN UP, THEN READ ON.
 
+get_python_version() {
+  local dz='get_python_version' || : # dz == dollar zero == $0
+
+  if [ $# -ne 1 ]
+  then
+    printf 'usage: %s <variable-name>\n' "${dz}" >&2
+    return 2
+  fi
+
+  # TODO: make this work for arbitrary python versions
+  for pyv in python3 python python2 python2.7 python2.8
+  do
+    if command -v "${pyv}" > /dev/null 2>&1
+    then
+      eval "$1"'='"${pyv}" || {
+        printf '%s: error returning value %s to variable %s\n' "${dz}" "${pyv}" "$1" >&2
+        return 2
+      }
+      return 0
+    fi
+  done
+
+  eval "$1"'=' || {
+    printf '%s: error returning empty value to %s\n' "${dz}" "$1" >&2
+    return 2
+  }
+  return 1
+}
+
 _ilpython_helper() (
-dz='_ilpython_helper' # dz == dollar zero == $0
+dz='_ilpython_helper'
 
 if [ $# -ne 0 ]
 then
@@ -32,7 +61,12 @@ then
   exit 1
 fi
 
-for dep in expr sed python3
+get_python_version pyversion || {
+  printf '%s: could not find python\n' "${dz}" >&2
+  exit 2
+}
+
+for dep in expr sed "${pyversion}"
 do
   command -v "${dep}" > /dev/null 2>&1 || {
     printf '%s: could not find %s\n' "${dz}" "${dep}" >&2
@@ -68,7 +102,7 @@ printf '%s\n' "${cmd_line}" | \
   sed -e 's/'"${pre_cmd}"'/\1/'
 )"
 
-printf '%s\n' "${input_python}" | python3 || {
+printf '%s\n' "${input_python}" | "${pyversion}" || {
   printf '%s: failed executing python code\n' "${dz}" >&2
   exit 1
 }
