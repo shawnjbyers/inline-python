@@ -23,6 +23,14 @@ esac
 # IF YOU'RE LOOKING AT THIS SCRIPT WITHOUT TRYING TO FIGURE OUT HOW IT WAS
 # WRITTEN, GO BACK NOW AND TRY. IF YOU'VE ALREADY GIVEN UP, THEN READ ON.
 
+_ilpython_helper() (
+bname='_ilpython_helper'
+
+if [ $# -ne 0 ]; then
+  printf '%s: bad usage\n' "${bname}" >&2
+  exit 1
+fi
+
 get_python_version() {
   local bname='get_python_version' || :
 
@@ -48,14 +56,6 @@ get_python_version() {
   }
   return 1
 }
-
-_ilpython_helper() (
-bname='_ilpython_helper'
-
-if [ $# -ne 0 ]; then
-  printf '%s: bad usage\n' "${bname}" >&2
-  exit 1
-fi
 
 get_python_version pyversion || {
   printf '%s: could not find python\n' "${bname}" >&2
