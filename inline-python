@@ -41,7 +41,7 @@ get_python_version() {
   # TODO: make this work for arbitrary python versions
   for pyv in python3 python python2 python2.7 python2.8; do
     if command -v "${pyv}" > /dev/null 2>&1; then
-      eval "$1"'='"${pyv}" || {
+      eval "$1"'="${pyv}"' || {
         printf '%s: error returning value %s to variable %s\n' "${bname}" "${pyv}" "$1" >&2
         return 2
       }
