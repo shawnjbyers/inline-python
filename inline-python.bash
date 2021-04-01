@@ -24,10 +24,10 @@ esac
 # WRITTEN, GO BACK NOW AND TRY. IF YOU'VE ALREADY GIVEN UP, THEN READ ON.
 
 get_python_version() {
-  local dz='get_python_version' || : # dz == dollar zero == $0
+  local bname='get_python_version' || :
 
   if [ $# -ne 1 ]; then
-    printf 'usage: %s <variable-name>\n' "${dz}" >&2
+    printf 'usage: %s <variable-name>\n' "${bname}" >&2
     return 2
   fi
 
@@ -35,7 +35,7 @@ get_python_version() {
   for pyv in python3 python python2 python2.7 python2.8; do
     if command -v "${pyv}" > /dev/null 2>&1; then
       eval "$1"'='"${pyv}" || {
-        printf '%s: error returning value %s to variable %s\n' "${dz}" "${pyv}" "$1" >&2
+        printf '%s: error returning value %s to variable %s\n' "${bname}" "${pyv}" "$1" >&2
         return 2
       }
       return 0
@@ -43,42 +43,42 @@ get_python_version() {
   done
 
   eval "$1"'=' || {
-    printf '%s: error returning empty value to %s\n' "${dz}" "$1" >&2
+    printf '%s: error returning empty value to %s\n' "${bname}" "$1" >&2
     return 2
   }
   return 1
 }
 
 _ilpython_helper() (
-dz='_ilpython_helper'
+bname='_ilpython_helper'
 
 if [ $# -ne 0 ]; then
-  printf '%s: bad usage\n' "${dz}" >&2
+  printf '%s: bad usage\n' "${bname}" >&2
   exit 1
 fi
 
 get_python_version pyversion || {
-  printf '%s: could not find python\n' "${dz}" >&2
+  printf '%s: could not find python\n' "${bname}" >&2
   exit 2
 }
 
 for dep in expr sed "${pyversion}"; do
   command -v "${dep}" > /dev/null 2>&1 || {
-    printf '%s: could not find %s\n' "${dz}" "${dep}" >&2
+    printf '%s: could not find %s\n' "${bname}" "${dep}" >&2
     exit 1
   }
 done
 
 cmd_line="$(history 1)" || {
-  printf '%s: history failed\n' "${dz}" >&2
-  printf '%s: must be run from interactive bash\n' "${dz}" >&2
+  printf '%s: history failed\n' "${bname}" >&2
+  printf '%s: must be run from interactive bash\n' "${bname}" >&2
   exit 1
 }
 
 pre_cmd='[[:space:]]*[[:digit:]]\{1,\}[[:space:]]\{1,\}'
 
 expr -- "${cmd_line}" : "${pre_cmd}" > /dev/null 2>&1 || {
-  printf '%s: unrecognized history format. is this not bash?\n' "${dz}" 2>&1
+  printf '%s: unrecognized history format. is this not bash?\n' "${bname}" 2>&1
   exit 1
 }
 
@@ -98,7 +98,7 @@ printf '%s\n' "${cmd_line}" | \
 )"
 
 printf '%s\n' "${input_python}" | "${pyversion}" || {
-  printf '%s: failed executing python code\n' "${dz}" >&2
+  printf '%s: failed executing python code\n' "${bname}" >&2
   exit 1
 }
 )
