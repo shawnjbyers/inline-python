@@ -26,17 +26,14 @@ esac
 get_python_version() {
   local dz='get_python_version' || : # dz == dollar zero == $0
 
-  if [ $# -ne 1 ]
-  then
+  if [ $# -ne 1 ]; then
     printf 'usage: %s <variable-name>\n' "${dz}" >&2
     return 2
   fi
 
   # TODO: make this work for arbitrary python versions
-  for pyv in python3 python python2 python2.7 python2.8
-  do
-    if command -v "${pyv}" > /dev/null 2>&1
-    then
+  for pyv in python3 python python2 python2.7 python2.8; do
+    if command -v "${pyv}" > /dev/null 2>&1; then
       eval "$1"'='"${pyv}" || {
         printf '%s: error returning value %s to variable %s\n' "${dz}" "${pyv}" "$1" >&2
         return 2
@@ -55,8 +52,7 @@ get_python_version() {
 _ilpython_helper() (
 dz='_ilpython_helper'
 
-if [ $# -ne 0 ]
-then
+if [ $# -ne 0 ]; then
   printf '%s: bad usage\n' "${dz}" >&2
   exit 1
 fi
@@ -66,8 +62,7 @@ get_python_version pyversion || {
   exit 2
 }
 
-for dep in expr sed "${pyversion}"
-do
+for dep in expr sed "${pyversion}"; do
   command -v "${dep}" > /dev/null 2>&1 || {
     printf '%s: could not find %s\n' "${dz}" "${dep}" >&2
     exit 1
