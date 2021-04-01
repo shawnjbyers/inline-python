@@ -85,7 +85,7 @@ elif ! [ -z "${ZSH_VERSION-}" ]; then
   exit 0
 else
   # TODO: could work for other shells
-  printf '%s: unrecognized shell' "${bname}" >&2
+  printf '%s: unrecognized shell, try bash or zsh' "${bname}" >&2
   exit 1
 fi
 )
