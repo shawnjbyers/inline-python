@@ -77,12 +77,12 @@ if ! [ -z "${BASH_VERSION-}" ]; then
   exit 0
 elif ! [ -z "${ZSH_VERSION-}" ]; then
   # zsh
-  printf '%s: zsh not supported, try bash\n' "${bname}" >&2
-  exit 1
-  # `fc -l -1` only gets you the last line not the current one. There doesn't
-  # seem to be a way around this. `fc -l 0` does the beginning. We could pester
-  # them into adding `fc -l -0`, but that doesn't seem like a good use of
-  # anyone's  time.
+  if [ -z "${HISTCMD-}" ]; then
+    printf '%s: HISTCMD not set\n' "${bname}" >&2
+    exit 1
+  fi
+  history "${HISTCMD}" || exit 1
+  exit 0
 else
   # TODO: could work for other shells
   printf '%s: unrecognized shell' "${bname}" >&2
