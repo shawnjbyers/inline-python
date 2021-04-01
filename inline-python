@@ -71,14 +71,14 @@ done
 
 cmd_line="$(history 1)" || {
   printf '%s: history failed\n' "${bname}" >&2
-  printf '%s: must be run from interactive bash\n' "${bname}" >&2
+  printf '%s: must be run from an interactive shell\n' "${bname}" >&2
   exit 1
 }
 
 pre_cmd='[[:space:]]*[[:digit:]]\{1,\}[[:space:]]\{1,\}'
 
 expr -- "${cmd_line}" : "${pre_cmd}" > /dev/null 2>&1 || {
-  printf '%s: unrecognized history format. is this not bash?\n' "${bname}" 2>&1
+  printf '%s: unrecognized history format\n' "${bname}" 2>&1
   exit 1
 }
 
