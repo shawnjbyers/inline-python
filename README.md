@@ -4,7 +4,7 @@ This repository contains nothing but bad hacks.
 ## How to Use
 From a bash prompt, run the following:
 ```
-$ . ./inline-python.bash
+$ . ./inline-python
 $ ilpython print("hello world")
 ```
 
