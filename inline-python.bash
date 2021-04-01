@@ -80,7 +80,7 @@ cmd_line="$(history 1)" || {
   exit 1
 }
 
-pre_cmd='[[:space:]]*[[:digit:]]\+[[:space:]]\+'
+pre_cmd='[[:space:]]*[[:digit:]]\{1,\}[[:space:]]\{1,\}'
 
 expr -- "${cmd_line}" : "${pre_cmd}" > /dev/null 2>&1 || {
   printf '%s: unrecognized history format. is this not bash?\n' "${dz}" 2>&1
@@ -89,7 +89,7 @@ expr -- "${cmd_line}" : "${pre_cmd}" > /dev/null 2>&1 || {
 
 # XXX: I could try to parse the command line properly, but this is already a
 # hack. There's really no need to try to legitimize this.
-pre_cmd="${pre_cmd}"'ilpython[[:space:]]\+\([^[:space:]].*\)$'
+pre_cmd="${pre_cmd}"'ilpython[[:space:]]\{1,\}\([^[:space:]].*\)$'
 expr -- "${cmd_line}" : "${pre_cmd}" > /dev/null 2>&1 || {
   printf 'usage:\n$ ilpython print("hello world")\n' 2>&1
   exit 1
