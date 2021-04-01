@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO: this could work for other POSIX shells that have a history builtin
-
 _ilpython_print_usage() (
 echo '$ ilpython print("hello world")' >&2
 echo '$ ilpython print("hello", end=" "); print("wor" + "ld")' >&2
@@ -22,6 +20,7 @@ esac
 
 # IF YOU'RE LOOKING AT THIS SCRIPT WITHOUT TRYING TO FIGURE OUT HOW IT WAS
 # WRITTEN, GO BACK NOW AND TRY. IF YOU'VE ALREADY GIVEN UP, THEN READ ON.
+
 
 _ilpython_helper() (
 bname='_ilpython_helper'
@@ -69,9 +68,30 @@ for dep in expr sed "${pyversion}"; do
   }
 done
 
-cmd_line="$(history 1)" || {
-  printf '%s: history failed\n' "${bname}" >&2
-  printf '%s: must be run from an interactive shell\n' "${bname}" >&2
+get_last_line() (
+bname='get_last_line'
+
+if ! [ -z "${BASH_VERSION-}" ]; then
+  # bash
+  history 1 || exit 1
+  exit 0
+elif ! [ -z "${ZSH_VERSION-}" ]; then
+  # zsh
+  printf '%s: zsh not supported, try bash\n' "${bname}" >&2
+  exit 1
+  # `fc -l -1` only gets you the last line not the current one. There doesn't
+  # seem to be a way around this. `fc -l 0` does the beginning. We could pester
+  # them into adding `fc -l -0`, but that doesn't seem like a good use of
+  # anyone's  time.
+else
+  # TODO: could work for other shells
+  printf '%s: unrecognized shell' "${bname}" >&2
+  exit 1
+fi
+)
+
+cmd_line="$(get_last_line)" || {
+  printf '%s: failed to get last line\n' "${bname}" >&2
   exit 1
 }
 
